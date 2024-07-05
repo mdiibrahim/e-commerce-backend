@@ -29,7 +29,7 @@ const getAllOrders = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(200).json({
       success: false,
-      message: 'Server error!!!',
+      message: 'Server error!!',
       data: error,
     });
   }
