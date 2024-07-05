@@ -20,6 +20,23 @@ const createProduct = async (req: Request, res: Response) => {
   }
 };
 
+const getAllProducts = async (req: Request, res: Response) => {
+  try {
+    const result = await ProductServices.getAllProductsFromDB();
+
+    res.status(200).json({
+      success: true,
+      message: 'Products fetched successfully!',
+      data: result,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Server error!!!',
+      error,
+    });
+  }
+};
 const getSingleProduct = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
@@ -38,14 +55,16 @@ const getSingleProduct = async (req: Request, res: Response) => {
     });
   }
 };
-const getAllProducts = async (req: Request, res: Response) => {
+const deleteSingleProduct = async (req: Request, res: Response) => {
   try {
-    const result = await ProductServices.getAllProductsFromDB();
+    const { productId } = req.params;
+
+    await ProductServices.deleteSingleProductFromDB(productId);
 
     res.status(200).json({
       success: true,
-      message: 'Products fetched successfully!',
-      data: result,
+      message: 'Product deleted successfully!',
+      data: null,
     });
   } catch (error) {
     res.status(500).json({
@@ -59,4 +78,5 @@ export const ProductController = {
   createProduct,
   getAllProducts,
   getSingleProduct,
+  deleteSingleProduct,
 };
