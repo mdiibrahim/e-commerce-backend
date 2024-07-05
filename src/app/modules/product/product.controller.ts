@@ -26,7 +26,9 @@ const getAllProducts = async (req: Request, res: Response) => {
     const message = searchTerm
       ? `Products matching search term ${searchTerm} fetched successfully!`
       : 'Products fetched successfully!';
-    const result = await ProductServices.getAllProductsFromDB();
+
+    const filter = searchTerm ? (searchTerm as string) : undefined;
+    const result = await ProductServices.getAllProductsFromDB(filter);
 
     res.status(200).json({
       success: true,
