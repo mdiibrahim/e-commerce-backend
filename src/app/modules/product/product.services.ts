@@ -6,7 +6,6 @@ const createProductInDB = async (product: IProduct) => {
   return result;
 };
 const getAllProductsFromDB = async (searchTerm?: string) => {
-  // eslint-disable-next-line prefer-const
   let query = {};
   if (searchTerm) {
     query = { $text: { $search: searchTerm } };
