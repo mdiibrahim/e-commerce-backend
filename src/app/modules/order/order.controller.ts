@@ -1,10 +1,17 @@
 import { Request, Response } from 'express';
 import { OrderServices } from './order.services';
+import { OrderValidation } from './order.validation';
+import { Types } from 'mongoose';
 
 const createOrder = async (req: Request, res: Response) => {
   try {
     const { order } = req.body;
-    const result = await OrderServices.createOrderInDB(order);
+    const zodParseOrder = OrderValidation.orderValidationSchema.parse(order);
+    const orderDataWithObjectId = {
+      ...zodParseOrder,
+      productId: new Types.ObjectId(zodParseOrder.productId),
+    };
+    const result = await OrderServices.createOrderInDB(orderDataWithObjectId);
     res.status(200).json({
       success: true,
       message: 'Order created successfully!',
