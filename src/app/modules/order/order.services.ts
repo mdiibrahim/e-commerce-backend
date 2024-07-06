@@ -26,14 +26,16 @@ const createOrderInDB = async (order: IOrder) => {
     { _id: order.productId },
     { 'inventory.quantity': newQuantity }
   );
-  const result = await OrderModel.create(order);
+  const createdOrder = await OrderModel.create(order);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { _id, ...result } = createdOrder.toObject();
   return result;
 };
 
 const getAllOrdersFromDB = async (email?: string | undefined) => {
   const result = email
-    ? await OrderModel.find({ email }) // Retrieve All Orders
-    : await OrderModel.find({}); // or Retrieve Orders by User Email
+    ? await OrderModel.find({ email }, { _id: 0 }) // Retrieve All Orders
+    : await OrderModel.find({}, { _id: 0 }); // or Retrieve Orders by User Email
   if (result.length === 0) {
     throw new Error(
       email ? 'Orders not found for the provided email' : 'Orders not found'

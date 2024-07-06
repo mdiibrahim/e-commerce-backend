@@ -6,7 +6,10 @@ const createProductInDB = async (product: IProduct) => {
   if (await Product.isProductExists(product.name)) {
     throw new Error('Product already exists!');
   }
-  return await Product.create(product);
+  const createdProduct = await Product.create(product);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { _id, ...result } = createdProduct.toObject();
+  return result;
 };
 
 const getAllProductsFromDB = async (searchTerm?: string) => {
@@ -14,11 +17,11 @@ const getAllProductsFromDB = async (searchTerm?: string) => {
   if (!query) {
     throw new Error('Product not found');
   }
-  return await Product.find(query);
+  return await Product.find(query, { _id: 0 });
 };
 
 const getSingleProductFromDB = async (id: string) => {
-  const product = await Product.findById(id);
+  const product = await Product.findById(id, { _id: 0 });
   if (!product) {
     throw new Error('Product not found');
   }
@@ -26,7 +29,7 @@ const getSingleProductFromDB = async (id: string) => {
 };
 
 const deleteSingleProductFromDB = async (id: string) => {
-  const product = await Product.findByIdAndDelete(id);
+  const product = await Product.findByIdAndDelete(id, { _id: 0 });
   if (!product) {
     throw new Error('Product not found');
   }
@@ -43,7 +46,10 @@ const updateProductInDB = async (
   if (!product) {
     throw new Error('Product not found');
   }
-  return product;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { _id, ...result } = product.toObject();
+  return result;
 };
 
 export const ProductServices = {

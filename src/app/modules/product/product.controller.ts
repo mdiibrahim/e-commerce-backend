@@ -120,6 +120,7 @@ const deleteSingleProduct = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       message: 'Product deleted successfully!',
+      data: null,
     });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
