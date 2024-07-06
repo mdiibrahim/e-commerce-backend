@@ -14,7 +14,7 @@ app.use((0, cors_1.default)());
 app.use('/api/products', product_route_1.ProductRoutes);
 app.use('/api/orders', order_route_1.OrderRoutes);
 app.get('/', (req, res) => {
-    res.send('e-commerce backend');
+    res.send('welcome to the e-commerce backend');
 });
 //Not Found Route
 app.get('/*', (req, res) => {

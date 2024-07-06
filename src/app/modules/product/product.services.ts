@@ -40,15 +40,23 @@ const updateProductInDB = async (
   id: string,
   productData: Partial<IProduct>,
 ) => {
-  const product = await Product.findByIdAndUpdate(id, productData, {
-    new: true,
-  });
-  if (!product) {
+  const updatedProduct = await Product.findById(id);
+  if (!updatedProduct) {
     throw new Error('Product not found');
   }
 
+  // Merge existing product data with new data
+  Object.assign(updatedProduct, productData);
+
+  // check arrays like 'variants'
+  if (productData.variants) {
+    updatedProduct.variants = productData.variants;
+  }
+
+  await updatedProduct.save();
+
   // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-  const { _id, ...result } = product.toObject();
+  const { _id, ...result } = updatedProduct.toObject();
   return result;
 };
 
