@@ -18,5 +18,6 @@ export interface IProduct {
 }
 
 export interface IProductModel extends Model<IProduct> {
+  // eslint-disable-next-line no-unused-vars
   isProductExists(name: string): Promise<IProduct | null>;
 }

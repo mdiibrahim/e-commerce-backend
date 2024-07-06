@@ -154,7 +154,7 @@ const updateProduct = async (req: Request, res: Response) => {
       ProductValidation.updateProductValidationSchema.parse(productData);
     const result = await ProductServices.updateProductInDB(
       productId,
-      zodParseUpdateProduct
+      zodParseUpdateProduct,
     );
 
     res.status(200).json({

@@ -7,7 +7,7 @@ const createProductInDB = async (product: IProduct) => {
     throw new Error('Product already exists!');
   }
   const createdProduct = await Product.create(product);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
   const { _id, ...result } = createdProduct.toObject();
   return result;
 };
@@ -38,7 +38,7 @@ const deleteSingleProductFromDB = async (id: string) => {
 
 const updateProductInDB = async (
   id: string,
-  productData: Partial<IProduct>
+  productData: Partial<IProduct>,
 ) => {
   const product = await Product.findByIdAndUpdate(id, productData, {
     new: true,
@@ -47,7 +47,7 @@ const updateProductInDB = async (
     throw new Error('Product not found');
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
   const { _id, ...result } = product.toObject();
   return result;
 };

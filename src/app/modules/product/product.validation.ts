@@ -24,7 +24,7 @@ const productValidationSchema = z.object({
   price: z.number().positive('Price must be positive'),
   category: z.string().min(3, 'Category must be at least 3 characters long'),
   tags: z.array(
-    z.string().min(3, 'Each tag must be at least 3 characters long')
+    z.string().min(3, 'Each tag must be at least 3 characters long'),
   ),
   variants: z.array(variantValidationSchema),
   inventory: inventoryValidationSchema,

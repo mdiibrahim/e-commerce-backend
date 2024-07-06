@@ -68,15 +68,12 @@ const getAllOrders = async (req: Request, res: Response) => {
     });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    console.log(error.message);
     if (error.message === 'Orders not found') {
-      console.log(error.message);
       res.status(404).json({
         success: false,
         message: 'Orders not found',
       });
     } else if (error.message === 'Orders not found for the provided email') {
-      console.log(error.message);
       res.status(404).json({
         success: false,
         message: 'Orders not found for the provided email',

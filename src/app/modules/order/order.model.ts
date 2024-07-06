@@ -10,7 +10,7 @@ export const orderSchema = new Schema<IOrder>(
   },
   {
     versionKey: false,
-  }
+  },
 );
 
 export const OrderModel = model<IOrder>('Order', orderSchema);

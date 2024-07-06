@@ -11,7 +11,7 @@ const variantsSchema = new Schema<IVariant>(
     type: { type: String, required: true },
     value: { type: String, required: true },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const inventorySchema = new Schema<IInventory>(
@@ -19,7 +19,7 @@ const inventorySchema = new Schema<IInventory>(
     quantity: { type: Number, required: true },
     inStock: { type: Boolean, required: true },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const productSchema = new Schema<IProduct>(
@@ -32,7 +32,7 @@ const productSchema = new Schema<IProduct>(
     variants: { type: [variantsSchema], required: true },
     inventory: { type: inventorySchema, required: true },
   },
-  { versionKey: false }
+  { versionKey: false },
 );
 
 productSchema.index({

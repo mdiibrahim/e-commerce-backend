@@ -19,15 +19,16 @@ const createOrderInDB = async (order: IOrder) => {
   if (newQuantity == 0) {
     await Product.updateOne(
       { _id: order.productId },
-      { 'inventory.inStock': false }
+      { 'inventory.inStock': false },
     );
   }
   await Product.updateOne(
     { _id: order.productId },
-    { 'inventory.quantity': newQuantity }
+    { 'inventory.quantity': newQuantity },
   );
   const createdOrder = await OrderModel.create(order);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
   const { _id, ...result } = createdOrder.toObject();
   return result;
 };
@@ -38,7 +39,7 @@ const getAllOrdersFromDB = async (email?: string | undefined) => {
     : await OrderModel.find({}, { _id: 0 }); // or Retrieve Orders by User Email
   if (result.length === 0) {
     throw new Error(
-      email ? 'Orders not found for the provided email' : 'Orders not found'
+      email ? 'Orders not found for the provided email' : 'Orders not found',
     );
   }
   return result;
