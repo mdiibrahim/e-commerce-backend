@@ -1,3 +1,4 @@
+// controller
 import { Request, Response } from 'express';
 import { ProductServices } from './product.services';
 import { ProductValidation } from './product.validation';
@@ -9,17 +10,25 @@ const createProduct = async (req: Request, res: Response) => {
       ProductValidation.productValidationSchema.parse(product);
     const result = await ProductServices.createProductInDB(zodParseProduct);
 
-    res.status(200).json({
+    res.status(201).json({
       success: true,
       message: 'Product created successfully!',
       data: result,
     });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Server error!!!',
-      error,
-    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    if (error.message === 'Product already exists!') {
+      res.status(400).json({
+        success: false,
+        message: 'Product already exists!',
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: 'Server error!!!',
+        error,
+      });
+    }
   }
 };
 
@@ -27,7 +36,7 @@ const getAllProducts = async (req: Request, res: Response) => {
   try {
     const { searchTerm } = req.query;
     const message = searchTerm
-      ? `Products matching search term ${searchTerm} fetched successfully!`
+      ? `Products matching search term '${searchTerm}' fetched successfully!`
       : 'Products fetched successfully!';
 
     const filter = searchTerm ? (searchTerm as string) : undefined;
@@ -38,14 +47,23 @@ const getAllProducts = async (req: Request, res: Response) => {
       message,
       data: result,
     });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Server error!!!',
-      error,
-    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    if (error.message === 'Product not found') {
+      res.status(404).json({
+        success: false,
+        message: 'Product not found!',
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: 'Server error!!!',
+        error,
+      });
+    }
   }
 };
+
 const getSingleProduct = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
@@ -56,31 +74,46 @@ const getSingleProduct = async (req: Request, res: Response) => {
       message: 'Product fetched successfully!',
       data: result,
     });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Server error!!!',
-      error,
-    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    if (error.message === 'Product not found') {
+      res.status(404).json({
+        success: false,
+        message: 'Product not found!',
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: 'Server error!!!',
+        error,
+      });
+    }
   }
 };
+
 const deleteSingleProduct = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
-
     await ProductServices.deleteSingleProductFromDB(productId);
 
     res.status(200).json({
       success: true,
       message: 'Product deleted successfully!',
-      data: null,
     });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Server error!!!',
-      error,
-    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    if (error.message === 'Product not found') {
+      res.status(404).json({
+        success: false,
+        message: 'Product not found!',
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: 'Server error!!!',
+        error,
+      });
+    }
   }
 };
 
@@ -94,17 +127,26 @@ const updateProduct = async (req: Request, res: Response) => {
       productId,
       zodParseUpdateProduct
     );
+
     res.status(200).json({
       success: true,
       message: 'Product updated successfully!',
       data: result,
     });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Server error!!!',
-      error,
-    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    if (error.message === 'Product not found') {
+      res.status(404).json({
+        success: false,
+        message: 'Product not found!',
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: 'Server error!!!',
+        error,
+      });
+    }
   }
 };
 

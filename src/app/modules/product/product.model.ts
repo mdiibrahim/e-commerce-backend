@@ -1,5 +1,10 @@
 import { model, Schema } from 'mongoose';
-import { IInventory, IProduct, IVariant } from './product.interface';
+import {
+  IInventory,
+  IProduct,
+  IProductModel,
+  IVariant,
+} from './product.interface';
 
 const variantsSchema = new Schema<IVariant>(
   {
@@ -16,45 +21,18 @@ const inventorySchema = new Schema<IInventory>(
   },
   { _id: false }
 );
+
 const productSchema = new Schema<IProduct>(
   {
-    name: {
-      type: String,
-      required: true,
-    },
-    description: {
-      type: String,
-      required: true,
-    },
-    price: {
-      type: Number,
-      required: true,
-    },
-    category: {
-      type: String,
-      required: true,
-    },
-    tags: {
-      type: [String],
-      required: true,
-    },
-    variants: [variantsSchema],
-    inventory: inventorySchema,
+    name: { type: String, required: true, unique: true },
+    description: { type: String, required: true },
+    price: { type: Number, required: true },
+    category: { type: String, required: true },
+    tags: { type: [String], required: true },
+    variants: { type: [variantsSchema], required: true },
+    inventory: { type: inventorySchema, required: true },
   },
-  {
-    toJSON: {
-      transform: (doc, ret) => {
-        delete ret.__v;
-        return ret;
-      },
-    },
-    toObject: {
-      transform: (doc, ret) => {
-        delete ret.__v;
-        return ret;
-      },
-    },
-  }
+  { versionKey: false }
 );
 
 productSchema.index({
@@ -64,4 +42,9 @@ productSchema.index({
   tags: 'text',
 });
 
-export const ProductModel = model<IProduct>('Product', productSchema);
+productSchema.statics.isProductExists = async function (name: string) {
+  const existingProduct = await this.findOne({ name });
+  return existingProduct;
+};
+
+export const Product = model<IProduct, IProductModel>('Product', productSchema);

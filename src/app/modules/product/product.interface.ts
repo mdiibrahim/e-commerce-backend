@@ -1,3 +1,4 @@
+import { Model } from 'mongoose';
 export interface IVariant {
   type: string;
   value: string;
@@ -14,4 +15,8 @@ export interface IProduct {
   tags: string[];
   variants: IVariant[];
   inventory: IInventory;
+}
+
+export interface IProductModel extends Model<IProduct> {
+  isProductExists(name: string): Promise<IProduct | null>;
 }

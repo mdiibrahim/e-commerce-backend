@@ -1,34 +1,49 @@
+// services
 import { IProduct } from './product.interface';
-import { ProductModel } from './product.model';
+import { Product } from './product.model';
 
 const createProductInDB = async (product: IProduct) => {
-  const result = await ProductModel.create(product);
-  return result;
-};
-const getAllProductsFromDB = async (searchTerm?: string) => {
-  let query = {};
-  if (searchTerm) {
-    query = { $text: { $search: searchTerm } };
+  if (await Product.isProductExists(product.name)) {
+    throw new Error('Product already exists!');
   }
-  const result = await ProductModel.find(query);
-  return result;
+  return await Product.create(product);
 };
+
+const getAllProductsFromDB = async (searchTerm?: string) => {
+  const query = searchTerm ? { $text: { $search: searchTerm } } : {};
+  if (!query) {
+    throw new Error('Product not found');
+  }
+  return await Product.find(query);
+};
+
 const getSingleProductFromDB = async (id: string) => {
-  const result = await ProductModel.findOne({ _id: id });
-  return result;
+  const product = await Product.findById(id);
+  if (!product) {
+    throw new Error('Product not found');
+  }
+  return product;
 };
 
 const deleteSingleProductFromDB = async (id: string) => {
-  const result = await ProductModel.findOneAndDelete({ _id: id });
-  return result;
+  const product = await Product.findByIdAndDelete(id);
+  if (!product) {
+    throw new Error('Product not found');
+  }
+  return product;
 };
 
 const updateProductInDB = async (
-  _id: string,
+  id: string,
   productData: Partial<IProduct>
 ) => {
-  const result = await ProductModel.findByIdAndUpdate(_id, productData);
-  return result;
+  const product = await Product.findByIdAndUpdate(id, productData, {
+    new: true,
+  });
+  if (!product) {
+    throw new Error('Product not found');
+  }
+  return product;
 };
 
 export const ProductServices = {
