@@ -42,6 +42,7 @@ productSchema.index({
   tags: 'text',
 });
 
+// static method for checking duplicate name in the database.
 productSchema.statics.isProductExists = async function (name: string) {
   const existingProduct = await this.findOne({ name });
   return existingProduct;

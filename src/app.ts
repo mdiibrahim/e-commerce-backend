@@ -7,12 +7,15 @@ const app: Application = express();
 app.use(express.json());
 app.use(cors());
 
+// products and orders routes
 app.use('/api/products', ProductRoutes);
 app.use('/api/orders', OrderRoutes);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('e-commerce backend');
 });
+
+//Not Found Route
 app.get('/*', (req: Request, res: Response) => {
   res.status(404).json({
     success: false,

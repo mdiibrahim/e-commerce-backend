@@ -3,15 +3,19 @@ import { IOrder } from './order.interface';
 import { OrderModel } from './order.model';
 
 const createOrderInDB = async (order: IOrder) => {
+  // Find the ordered product in the database
   const orderedProduct = await Product.findOne(order.productId);
   if (!orderedProduct) {
     throw new Error('Product not found');
   }
 
+  // Check if the ordered quantity greater than the available product quantity
   if (order.quantity > orderedProduct?.inventory?.quantity) {
     throw new Error('Insufficient quantity available in inventory');
   }
+
   const newQuantity = orderedProduct.inventory.quantity - order.quantity;
+  // If the new quantity is zero, inStock will false
   if (newQuantity == 0) {
     await Product.updateOne(
       { _id: order.productId },
@@ -25,12 +29,15 @@ const createOrderInDB = async (order: IOrder) => {
   const result = await OrderModel.create(order);
   return result;
 };
+
 const getAllOrdersFromDB = async (email?: string | undefined) => {
   const result = email
-    ? await OrderModel.find({ email })
-    : await OrderModel.find({});
-  if (!result) {
-    throw new Error('Orders not found');
+    ? await OrderModel.find({ email }) // Retrieve All Orders
+    : await OrderModel.find({}); // or Retrieve Orders by User Email
+  if (result.length === 0) {
+    throw new Error(
+      email ? 'Orders not found for the provided email' : 'Orders not found'
+    );
   }
   return result;
 };
